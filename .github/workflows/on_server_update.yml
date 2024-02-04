@@ -1,0 +1,15 @@
+# For Custom Github Action Trigger: "@HUFS-EZport/Server:main" Updated
+name: 'Event Handler: on Server Repository Updated'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  on-server-updated:
+    name: 'on server updated'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Echo Server Repository Updated'
+        run: |
+          echo 'Server Repository Updated!'
