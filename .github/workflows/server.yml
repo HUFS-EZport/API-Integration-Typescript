@@ -1,4 +1,4 @@
-name: 'Server jobs'
+name: 'Server Jobs'
 
 on:
   workflow_run:
@@ -32,25 +32,29 @@ jobs:
           git commit -am "CI: Auto updated submodule references" && git push || echo "No changes to commit"
 
   build_api:
-    name: Build Server API Specification
+    name: Build server API specification
     runs-on: ubuntu-latest
 
     needs:
-      - update_submodule
+      - update_submodules
+
+    env:
+      SERVER_REPO: ${{ github.repository_owner }}/Server
 
     steps:
-      - name: Checkout
-        uses: action/checkout@v4
+      - name: Checkout server
+        uses: actions/checkout@v4
         with:
-          repository: "${{ github.repository_owner }}/Server"
+          repository: ${{ env.SERVER_REPO }}
           ref: "main"
           token: ${{ secrets.ACCESS_TOKEN }}
+          path: ./server
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: 17
-          distribution: termurin
+          distribution: corretto
 
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v2.0.0
@@ -58,13 +62,58 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3.0.0
 
+      - name: Giving permission to Gradle
+        run: chmod +x ./gradlew
+        working-directory: ./server
+
+      - name: Make dummy resources
+        run: |
+          mkdir -p ./src/main/resources
+          touch ./src/main/resources/application.properties
+          echo naver.mail.password=1q2w3e4r5t6y >> ./src/main/resources/application.properties
+          echo spring.redis.host=localhost >> ./src/main/resources/application.properties
+          echo spring.redis.port=6379 >> ./src/main/resources/application.properties
+        working-directory: ./server
+
       - name: Build server by Gradle
         run: ./gradlew build -x test
+        working-directory: ./server
 
-      - name: Get Server Version
+      - name: Get server version
         run: |
-          ./gradlew properties -q | awk '/^version:/ {print $2}' >> $SERVER_VERSION
+          SERVER_VERSION=$(./gradlew properties -q | awk '/^version:/ {print $2}')
           echo "SERVER_VERSION=$SERVER_VERSION" >> $GITHUB_ENV
+        working-directory: ./server
 
-      - name: Echo Server Version
-        run: echo ${{ env.SERVER_VERSION }}
+      - name: Get server name
+        run: |
+          SERVER_NAME=$(./gradlew properties -q | awk '/^name:/ {print $2}')
+          echo "SERVER_NAME=$SERVER_NAME" >> $GITHUB_ENV
+        working-directory: ./server
+
+      - name: Get server jar name
+        run: echo "JAR_NAME=$SERVER_NAME-$SERVER_VERSION.jar" >> $GITHUB_ENV
+
+      - name: Run server
+        run: nohup java -jar ./build/libs/${{ env.JAR_NAME }} &
+        working-directory: ./server
+
+      - name: Wait server
+        run: sleep 15s
+
+      - name: Checkout API
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Get API specification
+        run: |
+          curl -o openapi.json localhost:8080/v3/api-docs
+
+      - name: Commit API specification
+        run: |
+          git config --global user.name 'Github Action'
+          git config --global user.email 'bot@noreply.github.com'
+          git add openapi.json
+          git remote set-url origin https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/${{ github.repository }}
+          git commit -am "CI: Auto updated OpenAPI Specification" && git push || echo "No changes to commit"
