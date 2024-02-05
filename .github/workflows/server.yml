@@ -1,6 +1,8 @@
 name: 'Server Jobs'
 
 on:
+  workflow_dispatch:
+
   workflow_run:
     types:
       - completed

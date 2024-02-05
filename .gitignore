@@ -1,2 +1,9 @@
 # IntelliJ Project Settings
 .idea
+
+# Built API client source files
+src
+dist
+
+# Node.js dependencies
+node_modules
