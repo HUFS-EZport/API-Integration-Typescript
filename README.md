@@ -39,7 +39,7 @@ Github settings -> Developer settings -> Personal access tokens
 
 ### 3. 패키지 설치하기
 npm 사용시
-`npm install @hufs-ezport/api`
+`npm install @hufs-ezport/api-client`
 
 yarn 사용시
-`yarn add @hufs-ezport/api`
+`yarn add @hufs-ezport/api-client`
