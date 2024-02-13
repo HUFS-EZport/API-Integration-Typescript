@@ -68,15 +68,6 @@ jobs:
         run: chmod +x ./gradlew
         working-directory: ./server
 
-      - name: Make dummy resources
-        run: |
-          mkdir -p ./src/main/resources
-          touch ./src/main/resources/application.properties
-          echo naver.mail.password=1q2w3e4r5t6y >> ./src/main/resources/application.properties
-          echo spring.redis.host=localhost >> ./src/main/resources/application.properties
-          echo spring.redis.port=6379 >> ./src/main/resources/application.properties
-        working-directory: ./server
-
       - name: Build server by Gradle
         run: ./gradlew build -x test
         working-directory: ./server
