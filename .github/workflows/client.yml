@@ -45,11 +45,10 @@ jobs:
           echo "REDIS_PASSWORD=asdasd" >> ./db/.env
     
       - name: Run DB
-        uses: isbang/compose-action@v1.5.1
-        with: 
-          compose-file: ./db/test-server.compose.yml
-          up-flags: -d
-
+        working-directory: ./db
+        run: |
+          docker-compose -f ./test-server.compse.yml --env-file .env up -d
+          
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
