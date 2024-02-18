@@ -87,7 +87,7 @@ jobs:
 
       - name: Set environment variables
         run: |
-          export DB_URL="jdbc:mysql://localhost:3306/asdasd"
+          export DB_URL=jdbc\:mysql\://localhost\:3306/asdasd"
           export MYSQL_PASSWORD=asdasd
           export MYSQL_USER=asdasd
           export REDIS_HOST=localhost
@@ -95,7 +95,7 @@ jobs:
           export REDIS_PASSWORD=asdasd
           export JWT_SECRET_KEY=asdasd
           export NAVER_MAIL_PASSWORD=asdasd
-          export SERVER_URL="http://localhost:8080"
+          export SERVER_URL=http\://localhost/:8080
 
       - name: Run server
         run: nohup java -jar ./build/libs/${{ env.JAR_NAME }} &
