@@ -98,7 +98,9 @@ jobs:
           export SERVER_URL="http://localhost:8080"
 
       - name: Run server
-        run: nohup java -jar ./build/libs/${{ env.JAR_NAME }} &
+        run: |
+          echo $DB_RUL
+          nohup java -jar ./build/libs/${{ env.JAR_NAME }} &
         working-directory: ./server
 
       - name: Wait server
