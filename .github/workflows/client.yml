@@ -78,6 +78,18 @@ jobs:
           export NAVER_MAIL_PASSWORD=asdasd
           export SERVER_URL="http://localhost:8080"
 
+      - name: Echo env
+        run: |
+            echo "$DB_URL"
+            echo "$MYSQL_PASSWORD"
+            echo "$MYSQL_USER"
+            echo "$REDIS_HOST"
+            echo "$REDIS_PORT"
+            echo "$REDIS_PASSWORD"
+            echo "$JWT_SECRET_KEY"
+            echo "$NAVER_MAIL_PASSWORD"
+            echo "$SERVER_URL"
+
       - name: Build server by Gradle
         run: ./gradlew build -x test
         working-directory: ./server
@@ -99,7 +111,6 @@ jobs:
 
       - name: Run server
         run: |
-          echo "$DB_URL"
           nohup java -jar ./build/libs/${{ env.JAR_NAME }} &
         working-directory: ./server
 
