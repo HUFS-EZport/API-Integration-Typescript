@@ -47,7 +47,7 @@ jobs:
       - name: Run DB
         working-directory: ./db
         run: |
-          docker-compose -f ./test-server.compse.yml --env-file .env up -d
+          docker-compose -f test-server.compose.yml --env-file .env up -d
           
       - name: Setup Java
         uses: actions/setup-java@v4
