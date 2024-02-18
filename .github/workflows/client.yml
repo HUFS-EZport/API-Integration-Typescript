@@ -99,7 +99,7 @@ jobs:
 
       - name: Run server
         run: |
-          echo $DB_URL
+          echo "$DB_URL"
           nohup java -jar ./build/libs/${{ env.JAR_NAME }} &
         working-directory: ./server
 
