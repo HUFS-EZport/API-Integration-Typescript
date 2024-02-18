@@ -66,7 +66,7 @@ jobs:
         run: chmod +x ./gradlew
         working-directory: ./server
 
-      - name: Set environment variables
+      - name: Build server by Gradle
         run: |
           export DB_URL="jdbc:mysql://localhost:3306/asdasd"
           export MYSQL_PASSWORD=asdasd
@@ -77,21 +77,7 @@ jobs:
           export JWT_SECRET_KEY=asdasd
           export NAVER_MAIL_PASSWORD=asdasd
           export SERVER_URL="http://localhost:8080"
-
-      - name: Echo env
-        run: |
-            echo "$DB_URL"
-            echo "$MYSQL_PASSWORD"
-            echo "$MYSQL_USER"
-            echo "$REDIS_HOST"
-            echo "$REDIS_PORT"
-            echo "$REDIS_PASSWORD"
-            echo "$JWT_SECRET_KEY"
-            echo "$NAVER_MAIL_PASSWORD"
-            echo "$SERVER_URL"
-
-      - name: Build server by Gradle
-        run: ./gradlew build -x test
+          ./gradlew build -x test
         working-directory: ./server
 
       - name: Get server version
@@ -111,6 +97,15 @@ jobs:
 
       - name: Run server
         run: |
+          export DB_URL="jdbc:mysql://localhost:3306/asdasd"
+          export MYSQL_PASSWORD=asdasd
+          export MYSQL_USER=asdasd
+          export REDIS_HOST=localhost
+          export REDIS_PORT=6379
+          export REDIS_PASSWORD=asdasd
+          export JWT_SECRET_KEY=asdasd
+          export NAVER_MAIL_PASSWORD=asdasd
+          export SERVER_URL="http://localhost:8080"
           nohup java -jar ./build/libs/${{ env.JAR_NAME }} &
         working-directory: ./server
 
