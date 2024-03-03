@@ -1,5 +1,5 @@
 {
-  "name": "@hufs-ezport/api-client",
+  "name": "@hufs-ezport/api-client-ts",
   "description": "Ezports API client",
   "version": "1.0.0",
   "main": "dist/cjs/index.js",
